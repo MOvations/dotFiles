@@ -1,0 +1,12 @@
+            {
+                "guid": "{c6eaf9f4-32a7-5fdc-b5cf-066e8a4b1e40}",
+                "hidden": false,
+                "name": "Ubuntu-18.04",
+                "source": "Windows.Terminal.Wsl",
+                "fontFace": "MesloLGS NF",
+                "fontSize": 10,
+                "startingDirectory": "\\\\wsl\\Ubuntu-18.04\\home\\mo",
+                "backgroundImage": "C:/Users/markh/Pictures/Wallpapers/matrix_2-wallpaper-1920x1200.jpg",
+                "backgroundImageAlignment": "topLeft",
+                "backgroundImageOpacity": 0.25
+            },
