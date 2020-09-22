@@ -1,4 +1,4 @@
-# Setup Windows Terminal in WSL2 on Ubuntu (18.04/20.04)
+## Setup Windows Terminal in WSL2 on Ubuntu (18.04/20.04)
 
 Motivation:
     I hate setting up  environments, so I'm taking the time to make an install to get things the way I like.
