@@ -3,7 +3,14 @@
 Motivation:
     I really dislike setting up  environments, and I do it a lot. So I'm taking the time to make an install to get things the way I like.
 
-You will have to get WSL2 installed as well as an ubuntu distro installed first (tested this on 20.04/18.04 for now) from the microsoft store, you will also have to install windows terminal from the microsoft store as well.
+Instructions:
+Setup WSL2 for your Windows 10 pro system and isntall an Ubuntu distro from the Microsoft store. 
+(Note: I've tested this on 20.04/18.04 so far)
+I also use the new Microstof Terminal, which you also install from the micro soft store
+
+It's still a bit quirky (sorry) sometime it installs in one pass, sometimes it only gets upto the 'git' portion
+if this happens run "code . " (without quotes) to launch VS Code and comment out the first part of the script. Also add the powerline10k to the .zshrc as well. Then rerun the modified script. Close the terminal reload, and boom. done. sometime this runs all at once, sometimes takes two passes. Still figuring out why...
+
 
 Thanks to:
     [Scott Hanselman](https://www.hanselman.com/blog/ItsTimeForYouToInstallWindowsTerminal.aspx)
@@ -12,4 +19,4 @@ Thanks to:
     for getting me setup with some great settings!
 
 Note:
-I implement 2 terminal settings (bash and zsh) as vscode and Windows Terminal will behave differently
+I implement 2 terminal settings (bash and zsh) as VScode and Windows Terminal will behave differently
