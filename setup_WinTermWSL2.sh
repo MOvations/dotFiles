@@ -1,3 +1,4 @@
+
 #! /bin/bash
 
 # echo 'export PS1="[\t] ubuntu20:\w\$ "' >> ~/.bashrc
@@ -37,16 +38,6 @@ else
 fi
 EOF
 
-
-
-# install Oh My Zosh
-sudo apt install -y zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
-sudo apt-get install -y fonts-powerline
-
-# Make sure git is installed
-sudo apt install -y git
-
 # Set some git credentials
 read -p 'git username: ' uservar
 git config --global user.name "$uservar"
@@ -57,11 +48,20 @@ git config --global user.password "$passvar"
 # cache these vars for 12 hours
 git config --global credential.helper cache --timeout=43200
 
+# install Oh My Zosh
+sudo apt install -y zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
+sudo apt-get install -y fonts-powerline
+source ~/.zshrc
+
+# Make sure git is installed
+sudo apt install -y git
+
 # Use the power10k theme
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
+sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.zshrc
 
-
-# Install Anaconda, follow the prompts
+# Install Anaconda (miniconda), follow the prompts
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 rm Miniconda3-latest-Linux-x86_64.sh
@@ -70,16 +70,29 @@ echo " the current user is: $USER"
 export PATH=/home/$USER/miniconda3/bin:$PATH
 
 # set PATH so it includes miniconda's bin
-
 cat <<EOF >> ~/.bashrc
 if [ -d "\$HOME/miniconda3/bin" ]; then
     PATH="\$HOME/miniconda3/bin:\$PATH"
 fi
 EOF
 
+# install jupyter-lab and set the browser(Firefox in my case) to open
 echo
-echo " You're almost done"
-echo " Open ~/.zshrc and change the ZSH_THEME variable to"
-echo " 'powerlevel10k/powerlevel10k' inplace of 'robbyrussell', then follow the instructions"
+echo "##### Creating Conda Environment 'newenv' #####"
+echo
+conda update -y conda
+conda create -n newenv -y python=3.9
+conda activate newenv
+conda install -y -c conda-forge jupyterlab
+conda install -y -c conda-forge nodejs
+conda install -y -c pyviz holoviz
+jupyter labextension install @pyviz/jupyterlab_pyviz
+export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
+jupyter lab --generate-config
+sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
+sed -i 's|c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+
+echo
+echo "##### You're done!!! #####"
 echo
 
