@@ -48,12 +48,12 @@ source ~/.zshrc
 sudo apt install -y git
 # Set some git credentials
 echo
-read -p 'git username: ' uservar
-git config --global user.name "$uservar"
-read -p 'git email: ' emailvar
-git config --global user.email "$emailvar"
-read -sp 'git password: ' passvar
-git config --global user.password "$passvar"
+read -p 'git username: ' user_var
+git config --global user.name "$user_var"
+read -p 'git email: ' email_var
+git config --global user.email "$email_var"
+read -sp 'git password: ' pass_var
+git config --global user.password "$pass_var"
 # cache these vars for 12 hours
 git config --global credential.helper cache --timeout=43200
 
