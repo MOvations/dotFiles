@@ -82,6 +82,7 @@ echo "##### Creating Conda Environment 'wsl' #####"
 echo
 conda update -y conda
 conda create -n wsl -y python=3.9
+conda init zsh
 conda activate wsl
 conda install -y -c conda-forge jupyterlab
 conda install -y -c conda-forge nodejs
