@@ -91,8 +91,8 @@ jupyter labextension install @pyviz/jupyterlab_pyviz
 echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
 jupyter lab --generate-config
 sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
-sed -i 's|c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
-source ~/.zshrc
+sed -i 's| c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+. ~/.profile
 
 echo
 echo "##### You're done!!! #####"
