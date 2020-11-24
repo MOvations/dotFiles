@@ -38,6 +38,12 @@ else
 fi
 EOF
 
+# install Oh My Zosh
+sudo apt install -y zsh
+sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
+sudo apt-get install -y fonts-powerline
+source ~/.zshrc
+
 # Make sure git is installed
 sudo apt install -y git
 # Set some git credentials
@@ -50,12 +56,6 @@ read -sp 'git password: ' passvar
 git config --global user.password "$passvar"
 # cache these vars for 12 hours
 git config --global credential.helper cache --timeout=43200
-
-# install Oh My Zosh
-sudo apt install -y zsh
-sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
-sudo apt-get install -y fonts-powerline
-source ~/.zshrc
 
 # Use the power10k theme
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
