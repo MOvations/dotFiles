@@ -78,11 +78,11 @@ EOF
 
 # install jupyter-lab and set the browser(Firefox in my case) to open
 echo
-echo "##### Creating Conda Environment 'newenv' #####"
+echo "##### Creating Conda Environment 'wsl' #####"
 echo
 conda update -y conda
-conda create -n newenv -y python=3.9
-conda activate newenv
+conda create -n wsl -y python=3.9
+conda activate wsl
 conda install -y -c conda-forge jupyterlab
 conda install -y -c conda-forge nodejs
 conda install -y -c pyviz holoviz
