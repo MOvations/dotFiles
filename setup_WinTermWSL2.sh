@@ -38,7 +38,10 @@ else
 fi
 EOF
 
+# Make sure git is installed
+sudo apt install -y git
 # Set some git credentials
+echo
 read -p 'git username: ' uservar
 git config --global user.name "$uservar"
 read -p 'git email: ' emailvar
@@ -53,9 +56,6 @@ sudo apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
 sudo apt-get install -y fonts-powerline
 source ~/.zshrc
-
-# Make sure git is installed
-sudo apt install -y git
 
 # Use the power10k theme
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
@@ -87,10 +87,11 @@ conda install -y -c conda-forge jupyterlab
 conda install -y -c conda-forge nodejs
 conda install -y -c pyviz holoviz
 jupyter labextension install @pyviz/jupyterlab_pyviz
-export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'
+echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
 jupyter lab --generate-config
 sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
 sed -i 's|c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+source ~/.zshrc
 
 echo
 echo "##### You're done!!! #####"
