@@ -102,9 +102,20 @@ jupyter lab --generate-config
 echo
 echo "##### setting up bowser launch support for WSL - should make this an if statement #####"
 echo
+##### Use Firefox Browswer #####
 echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
-sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
-sed -i 's| c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+
+##### TODO: make this conditional #####
+##### Uncomment the redirect files - jupyter_notebook_config #####
+# sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
+##### Switch from True to False - jupyter_notebook_config #####
+# sed -i 's| c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+
+##### Uncomment the redirect files - jupyter_lab_config #####
+sed -i '/c.ServerApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_lab_config.py
+##### Switch from True to False - jupyter_lab_config #####
+sed -i 's| c.ServerApp.use_redirect_file = True|c.ServerApp.use_redirect_file = False|' ~/.jupyter/jupyter_lab_config.py
+
 . ~/.profile
 
 echo
