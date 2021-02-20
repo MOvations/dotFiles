@@ -1,4 +1,4 @@
-# Setup Terminal in Ubuntu (18.04/20.04) with support for WSL2 and Ubuntu Server
+# Setup Terminal in Ubuntu with support for WSL2 and Ubuntu Server
 
 ## Motivation: <br>
 I dislike setting up environments, so I'm automating it to speed up deployments. I'll be trying to incorporate as many of my settingas as I like for all the linux environments I use.</br>
