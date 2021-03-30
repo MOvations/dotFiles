@@ -38,6 +38,8 @@
 #     PS2="\$HC\$FYEL&gt; \$RS"
 # fi
 # EOF
+##### Add Color to tmux #####
+echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
 
 ##### install Oh My Zosh #####
 sudo apt install -y zsh
