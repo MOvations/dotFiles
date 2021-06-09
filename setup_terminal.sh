@@ -1,43 +1,9 @@
 
 #! /bin/bash
 
-##### to make manual changes to bashrc, modify PS1 to something like this #####
-# echo 'export PS1="[\t] ubuntu20:\w\$ "' >> ~/.bashrc
+##### Make sure git and tmux are installed #####
+sudo apt install -y git tmux
 
-###### define basic promt colors for bash #####
-# cat <<EOF >> ~/.bashrc
-##### ANSI color codes #####
-# RS="\[\033[0m\]"    # reset
-# HC="\[\033[1m\]"    # hicolor
-# UL="\[\033[4m\]"    # underline
-# INV="\[\033[7m\]"   # inverse background and foreground
-# FBLK="\[\033[30m\]" # foreground black
-# FRED="\[\033[31m\]" # foreground red
-# FGRN="\[\033[32m\]" # foreground green
-# FYEL="\[\033[33m\]" # foreground yellow
-# FBLE="\[\033[34m\]" # foreground blue
-# FMAG="\[\033[35m\]" # foreground magenta
-# FCYN="\[\033[36m\]" # foreground cyan
-# FWHT="\[\033[37m\]" # foreground white
-# BBLK="\[\033[40m\]" # background black
-# BRED="\[\033[41m\]" # background red
-# BGRN="\[\033[42m\]" # background green
-# BYEL="\[\033[43m\]" # background yellow
-# BBLE="\[\033[44m\]" # background blue
-# BMAG="\[\033[45m\]" # background magenta
-# BCYN="\[\033[46m\]" # background cyan
-# BWHT="\[\033[47m\]" # background white
-# EOF
-
-
-# if [ "\$color_prompt" = yes ]; then
-#     PS1='\${debian_chroot:+(\$debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\\$ '
-# else
-#     #PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-#     PS1="\$HC\$FYEL[ \$FBLE\${debian_chroot:+(\$debian_chroot)}\u\$FYEL: \$FBLE\w \$FYEL]\\\$ \$RS"
-#     PS2="\$HC\$FYEL&gt; \$RS"
-# fi
-# EOF
 ##### Add Color to tmux #####
 echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
 
@@ -48,44 +14,71 @@ sudo apt-get install -y fonts-powerline
 echo "Oh My Zosh install, use source ~/.zshrc or logout then login to activate"
 # source ~/.zshrc
 
-##### Make sure git is installed #####
-sudo apt install -y git
-
-##### Set some git credentials #####
-echo
-read -p 'git username: ' user_var
-git config --global user.name "$user_var"
-read -p 'git email: ' email_var
-git config --global user.email "$email_var"
-read -sp 'git password: ' pass_var
-git config --global user.password "$pass_var"
-
-##### cache these vars for 12 hours #####
-git config --global credential.helper cache --timeout=43200
-
 ##### Use the power10k theme #####
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.zshrc
 
+
+##### Find System Architecture and install the MiniConda and extras ##### 
+arch=$(uname -m)
+echo $arch
+
+if [[ $arch == x86_64 ]]; then
+echo "X64 Architecture"
 ###### Install Anaconda (miniconda), follow the prompts #####
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
 bash Miniconda3-latest-Linux-x86_64.sh
 rm Miniconda3-latest-Linux-x86_64.sh
+fi
 
-echo " the current user is: $USER"
-export PATH=/home/$USER/miniconda3/bin:$PATH
+if [[ $arch == x86_32 ]]; then
+echo "X32 Architecture"
+###### Install Anaconda (miniconda), follow the prompts #####
+mini_vers=$"Miniconda3-latest-Linux-x86.sh"
+echo $mini_vers
+# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh
+# bash Miniconda3-latest-Linux-x86.sh
+# rm Miniconda3-latest-Linux-x86.sh
+fi
+
+if [[ $arch == armv* ]]; then
+echo "Arm architecture"
+###### Install Anaconda (miniconda), follow the prompts #####
+# wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-armv7l.sh
+mini_vers=$"Miniconda3-py39_4.10.1-Linux-aarch64.sh"
+echo $mini_vers
+fi
+
+wget http://repo.continuum.io/miniconda/$mini_vers
+# bash Miniconda3-latest-Linux-armv7l.sh
+bash $mini_vers -b -p $HOME/miniconda3
+rm $mini_vers
+eval "$(/home/$USER/miniconda3/conda shell.zsh hook)"
+
+
+conda init
 
 ##### set PATH so it includes miniconda's bin #####
-cat <<EOF >> ~/.bashrc
+cat <<EOF >> ~/.zshrc
 if [ -d "\$HOME/miniconda3/bin" ]; then
     PATH="\$HOME/miniconda3/bin:\$PATH"
 fi
 EOF
 
+sudo chown -R $USER /home/$USER/miniconda3
+
+##### Maybe do some updates #####
+sudo apt update
+sudo apt upgrade -y
+
+# Add Raspberry Pi channel for conda installations
+conda config --add channels rpi
+
 ###### install jupyter-lab and set the browser(Firefox in my case) to open #####
 echo
 echo "##### Creating Conda Environment 'py39' #####"
 echo
+conda update -y conda
 conda update -y conda
 conda create -n py39 -y python=3.9
 conda init zsh
@@ -100,18 +93,14 @@ echo "##### Generating Jupyter Lab config file at ~/.jupyter/jupyter_notebook_co
 echo
 jupyter lab --generate-config
 
-
-echo
-echo "##### setting up bowser launch support for WSL - should make this an if statement #####"
-echo
-##### Use Firefox Browswer #####
-echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
-
-##### TODO: make this conditional #####
-##### Uncomment the redirect files - jupyter_notebook_config #####
-# sed -i '/c.NotebookApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_notebook_config.py
-##### Switch from True to False - jupyter_notebook_config #####
-# sed -i 's| c.NotebookApp.use_redirect_file = True|c.NotebookApp.use_redirect_file = False|' ~/.jupyter/jupyter_notebook_config.py
+arch_vers=$(uname -r)
+echo "The kernal revision is" $arch_vers
+if [[ $arch_vers == *"WSL"* ]]; then
+  echo "This install appears to be on WSL, installing connections to windows FireFox browser"
+  echo
+  ##### Use Firefox Browswer #####
+  echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
+fi
 
 ##### Uncomment the redirect files - jupyter_lab_config #####
 sed -i '/c.ServerApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_lab_config.py
