@@ -1,11 +1,8 @@
 
 #! /bin/bash
 
-##### Make sure git and tmux are installed #####
-sudo apt install -y git tmux
-
-##### Add Color to tmux #####
-echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
+##### Make sure some common programs are installed are installed #####
+sudo apt install -y tmux neofetch pydf ffmpeg
 
 ##### install Oh My Zosh #####
 sudo apt install -y zsh
@@ -20,41 +17,36 @@ sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.
 
 
 ##### Find System Architecture and install the MiniConda and extras ##### 
+#########################################################################
 arch=$(uname -m)
 echo $arch
 
 if [[ $arch == x86_64 ]]; then
 echo "X64 Architecture"
-###### Install Anaconda (miniconda), follow the prompts #####
+mini_vers=$"Miniconda3-latest-Linux-x86_64.sh"
+echo $mini_vers
 wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh
-bash Miniconda3-latest-Linux-x86_64.sh
-rm Miniconda3-latest-Linux-x86_64.sh
 fi
 
 if [[ $arch == x86_32 ]]; then
 echo "X32 Architecture"
-###### Install Anaconda (miniconda), follow the prompts #####
 mini_vers=$"Miniconda3-latest-Linux-x86.sh"
 echo $mini_vers
-# wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh
-# bash Miniconda3-latest-Linux-x86.sh
-# rm Miniconda3-latest-Linux-x86.sh
+wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86.sh
 fi
 
 if [[ $arch == armv* ]]; then
 echo "Arm architecture"
-###### Install Anaconda (miniconda), follow the prompts #####
-# wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-armv7l.sh
-mini_vers=$"Miniconda3-py39_4.10.1-Linux-aarch64.sh"
-echo $mini_vers
+wget http://repo.continuum.io/miniconda/Miniconda3-latest-Linux-armv7l.sh
 fi
+#########################################################################
 
-wget http://repo.continuum.io/miniconda/$mini_vers
+#### Install Miniconda ####
+# wget http://repo.continuum.io/miniconda/$mini_vers
 # bash Miniconda3-latest-Linux-armv7l.sh
 bash $mini_vers -b -p $HOME/miniconda3
 rm $mini_vers
 eval "$(/home/$USER/miniconda3/conda shell.zsh hook)"
-
 
 conda init
 
@@ -67,12 +59,14 @@ EOF
 
 sudo chown -R $USER /home/$USER/miniconda3
 
-##### Maybe do some updates #####
-sudo apt update
-sudo apt upgrade -y
+##### Do some updates #####
+sudo apt update && sudo apt upgrade -y
 
 # Add Raspberry Pi channel for conda installations
+if [[ $arch == armv* ]]; then
 conda config --add channels rpi
+fi
+
 
 ###### install jupyter-lab and set the browser(Firefox in my case) to open #####
 echo
@@ -102,12 +96,21 @@ if [[ $arch_vers == *"WSL"* ]]; then
   echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
 fi
 
-##### Uncomment the redirect files - jupyter_lab_config #####
+##### Make jupyter_lab_config #####
 sed -i '/c.ServerApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_lab_config.py
-##### Switch from True to False - jupyter_lab_config #####
+##### Make jupyter_lab_config #####
 sed -i 's| c.ServerApp.use_redirect_file = True|c.ServerApp.use_redirect_file = False|' ~/.jupyter/jupyter_lab_config.py
 
 . ~/.profile
+
+mkdir ~/.scripts
+cp updater.sh ~/.scripts/
+
+echo "Adding myAliases to ZSH"
+zsh myAliases.sh
+
+echo "installing  bpytop"
+pip3 install bpytop --upgrade
 
 echo
 echo "##### You're done!!! #####"
