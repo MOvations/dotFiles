@@ -10,3 +10,16 @@
                 "backgroundImageAlignment": "topLeft",
                 "backgroundImageOpacity": 0.25
             },
+            {
+                "backgroundImage": "D:/Dropbox/Photos/Wallpapers/Retro Background 2.jpg",
+                "backgroundImageAlignment": "topLeft",
+                "backgroundImageOpacity": 0.14999999999999999,
+                "fontFace": "MesloLGS NF",
+                "fontSize": 10,
+                "guid": "{2c4de342-38b7-51cf-b940-2309a09bacaa}",
+                "hidden": false,
+                "name": "Conda",
+                "startingDirectory": "D:\\Dropbox\\CODE\\Python",
+                "commandline": "cmd.exe /K C:\\Users\\markh\\miniconda3\\Scripts\\activate.bat",
+                "icon": "C:\\Users\\markh\\miniconda3\\Lib\\site-packages\\conda\\shell\\conda_icon.ico"
+            }
