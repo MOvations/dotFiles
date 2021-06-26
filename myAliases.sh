@@ -6,9 +6,12 @@ echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
 ##### history shortcut #####
 alias h='history'
 
-##### mk function ####
-printf "\n##### mk function ####\n" >> ~/.zshrc
+##### my alias functions ####
+printf "\n##### my alias functions ####\n" >> ~/.zshrc
 echo 'mk() { mkdir -p "$@" && cd "$_"; }' >> ~/.zshrc  # use quotes for folders with spaces
+
+printf "\n" >> ~/.zshrc
+echo 'alias updater="zsh ~/.scripts/updater.sh"' >> ~/.zshrc 
 
 ##### Colorize the grep command output for ease of use (good for log files)##
 alias grep='grep --color=auto'
@@ -43,6 +46,5 @@ if [ $UID -ne 0 ]; then
     alias reboot='sudo reboot'
 fi
 
-# update on one command
-alias update='bash ~/.scripts/updater.sh'
+
 
