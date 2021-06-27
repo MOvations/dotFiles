@@ -41,6 +41,9 @@ alias l.='ls -d .* --color=auto'
 ##### top is bpytop #####
 alias top='bpytop'
 
+##### tmux #####
+alias ta="tmux attach -d"
+
 # if user is not root, pass all commands via sudo #
 if [ $UID -ne 0 ]; then
     alias reboot='sudo reboot'
