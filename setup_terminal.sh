@@ -34,9 +34,16 @@ if [[ $arch == armv* ]]; then
 echo "Arm architecture - Save yourself the trouble, use Python virtualenvs"
 echo $mini_vers
 echo "##### Adding IOTstack #####"
-curl -fsSL https://raw.githubusercontent.com/SensorsIot/IOTstack/master/install.sh | bash
+git clone https://github.com/SensorsIot/IOTstack.git ~/IOTstack
+
+mkdir ~/.ssh/
+sudo chmod 700 ~/.ssh/
+touch ~/.ssh/authorized_keys
+sudo chmod 644 ~/.ssh/authorized_keys
+sudo chown pi:pi ~/.ssh/authorized_keys
 fi
 #########################################################################
+
 
 
 #########################################################################
