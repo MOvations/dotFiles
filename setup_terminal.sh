@@ -1,5 +1,5 @@
 
-#! /bin/bash
+#!/bin/bash
 
 ##### Make sure some common programs are installed are installed #####
 sudo apt install -y tmux neofetch pydf ffmpeg
@@ -25,7 +25,7 @@ zsh myAliases.sh
 echo "neofetch" >> ~/.zshrc
 
 #########################################################################
-##### Find System Architecture and install appropriate stack ##### 
+##### Find System Architecture and install appropriate stack        ##### 
 #########################################################################
 arch=$(uname -m)
 echo $arch
