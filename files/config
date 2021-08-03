@@ -1,0 +1,39 @@
+# Read more about SSH config files: https://linux.die.net/man/5/ssh_config
+
+# Host alias
+#     HostName hostname
+#     User user
+
+Host dabox
+    HostName dabox
+    User mo
+    IdentityFile ~/.ssh/id_DaBox
+
+Host dabox-bfe
+    HostName <BFE>
+    Port <you know it>
+    User mo
+    IdentityFile ~/.ssh/id_DaBox
+
+Host raspi4f-bfe
+    HostName <BFE>
+    Port <you know it>
+    User pi
+    IdentityFile ~/.ssh/id_RasPi4
+
+Host raspi4
+    HostName raspi4
+    User pi
+    IdentityFile ~/.ssh/id_RasPi4
+
+Host carl
+    HostName carl
+    User pi
+    IdentityFile ~/.ssh/id_RasPi4
+
+Host github.com
+    HostName github.com
+    User git
+#    AddKeysToAgent yes
+#    UseKeychain yes
+    IdentityFile ~/.ssh/id_ansible
