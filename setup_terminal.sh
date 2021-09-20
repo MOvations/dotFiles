@@ -47,9 +47,12 @@ fi
 
 
 #########################################################################
-# Miniconda install for x86 based systems
+# x86_64 installs
 #########################################################################
 if [[ $arch == x86* ]]; then
+# install build-essential
+sudo apt update && sudo apt install -y build-essential
+# install miniconda from accompanying script
 bash create_py39_miniconda.sh
 fi
 #########################################################################
