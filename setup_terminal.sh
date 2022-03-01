@@ -2,20 +2,22 @@
 #!/bin/bash
 
 ##### Make sure some common programs are installed are installed #####
-sudo apt install -y tmux neofetch pydf ffmpeg
+sudo apt install -y tmux neofetch pydf 
 
 ##### install Oh My Zosh #####
+echo "Type 'exit' when first presented with zsh prompt to continue installation"
 sudo apt install -y zsh
 sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" 
-sudo apt-get install -y fonts-powerline
-echo "Oh My Zosh install, use source ~/.zshrc or logout then login to activate"
+sudo apt install -y fonts-powerline
 
 ##### Use the power10k theme #####
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.zshrc
 
-. ~/.profile
+# don't think I need this anymore
+#. ~/.profile
 
+##### Make Scripts directory and source files in ZSRC #####
 mkdir ~/.scripts
 cp updater.sh ~/.scripts/
 cp myAliases.sh ~/.scripts/
@@ -31,6 +33,8 @@ echo "source $HOME/.scripts/myAliases.sh" >> ~/.zshrc
 echo "#### Launch NeoFetch at session start #####" >> ~/.zshrc
 echo "neofetch" >> ~/.zshrc
 
+##### Add Color to tmux #####
+echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
 
 #########################################################################
 ##### Find System Architecture and install appropriate stack        ##### 

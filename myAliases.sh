@@ -1,17 +1,7 @@
 #!/bin/zsh
 
-##### Add Color to tmux #####
-echo 'set -g default-terminal "screen-256color"' >> ~/.tmux.conf
-
 ##### history shortcut #####
-alias h='history'
-
-##### my alias functions ####
-printf "\n##### my alias functions ####\n" >> ~/.zshrc
-echo 'mk() { mkdir -p "$@" && cd "$_"; }' >> ~/.zshrc  # use quotes for folders with spaces
-
-printf "\n" >> ~/.zshrc
-echo 'alias updater="zsh ~/.scripts/updater.sh"' >> ~/.zshrc 
+alias hg='history | grep'
 
 ##### Colorize the grep command output for ease of use (good for log files)##
 alias grep='grep --color=auto'
