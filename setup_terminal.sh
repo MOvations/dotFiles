@@ -2,7 +2,7 @@
 #!/bin/bash
 
 ##### Make sure some common programs are installed are installed #####
-sudo apt install -y tmux neofetch pydf 
+sudo apt update && sudo apt install -y tmux neofetch pydf 
 
 ##### install Oh My Zosh #####
 echo "Type 'exit' when first presented with zsh prompt to continue installation"
@@ -13,9 +13,6 @@ sudo apt install -y fonts-powerline
 ##### Use the power10k theme #####
 git clone --depth=1 https://github.com/romkatv/powerlevel10k.git ${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/themes/powerlevel10k
 sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.zshrc
-
-# don't think I need this anymore
-#. ~/.profile
 
 ##### Make Scripts directory and source files in ZSRC #####
 mkdir ~/.scripts
