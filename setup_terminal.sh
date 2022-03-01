@@ -25,7 +25,7 @@ cp conda_auto_env.sh ~/.scripts/
 
 echo "Adding conda_auto_env, myAliases, and updater to scripts and zshrc"
 echo "##### Activate Conda Envs When Entering Folder #####" >> ~/.zshrc
-echo "source $HOME/.scripts/conda_auto_env.sh" >> ~/.zshrc
+echo "source $HOME/.scripts/myFuncs.sh" >> ~/.zshrc
 
 echo "##### Activate Conda Envs When Entering Folder #####"
 echo "source $HOME/.scripts/myAliases.sh" >> ~/.zshrc
