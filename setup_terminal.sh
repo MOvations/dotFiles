@@ -18,11 +18,19 @@ sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.
 
 mkdir ~/.scripts
 cp updater.sh ~/.scripts/
+cp myAliases.sh ~/.scripts/
+cp conda_auto_env.sh ~/.scripts/
 
-echo "Adding myAliases"
-zsh myAliases.sh
+echo "Adding conda_auto_env, myAliases, and updater to scripts and zshrc"
+echo "##### Activate Conda Envs When Entering Folder #####" >> ~/.zshrc
+echo "source $HOME/.scripts/conda_auto_env.sh" >> ~/.zshrc
 
+echo "##### Activate Conda Envs When Entering Folder #####"
+echo "source $HOME/.scripts/myAliases.sh" >> ~/.zshrc
+
+echo "#### Launch NeoFetch at session start #####" >> ~/.zshrc
 echo "neofetch" >> ~/.zshrc
+
 
 #########################################################################
 ##### Find System Architecture and install appropriate stack        ##### 

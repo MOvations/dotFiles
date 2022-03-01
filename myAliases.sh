@@ -38,9 +38,6 @@ alias ll='ls -lath --color=auto'
 ##### Show hidden files #####
 alias l.='ls -d .* --color=auto'
 
-##### top is bpytop #####
-alias top='bpytop'
-
 ##### tmux #####
 alias ta="tmux attach -d"
 
@@ -49,5 +46,6 @@ if [ $UID -ne 0 ]; then
     alias reboot='sudo reboot'
 fi
 
-
+##### Launch Server #####
+alias servr="python3 -m http.server --bind localhost 7200 "
 

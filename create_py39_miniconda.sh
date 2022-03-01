@@ -60,6 +60,12 @@ echo "##### Generating Jupyter Lab config file at ~/.jupyter/jupyter_notebook_co
 echo
 jupyter lab --generate-config
 
+##### Make jupyter_lab_config #####
+sed -i '/c.ServerApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_lab_config.py
+##### Make jupyter_lab_config #####
+sed -i 's| c.ServerApp.use_redirect_file = True|c.ServerApp.use_redirect_file = False|' ~/.jupyter/jupyter_lab_config.py
+
+
 arch_vers=$(uname -r)
 echo "The kernal revision is" $arch_vers
 if [[ $arch_vers == *"WSL"* ]]; then
@@ -68,8 +74,3 @@ if [[ $arch_vers == *"WSL"* ]]; then
   ##### Use Firefox Browswer in WSL #####
   echo "export BROWSER='/mnt/c/Program Files/Mozilla Firefox/firefox.exe'" >> ~/.zshrc
 fi
-
-##### Make jupyter_lab_config #####
-sed -i '/c.ServerApp.use_redirect_file/s/^#//g' ~/.jupyter/jupyter_lab_config.py
-##### Make jupyter_lab_config #####
-sed -i 's| c.ServerApp.use_redirect_file = True|c.ServerApp.use_redirect_file = False|' ~/.jupyter/jupyter_lab_config.py
