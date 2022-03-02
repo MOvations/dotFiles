@@ -12,6 +12,12 @@ function conda_auto_env() {
     if [[ $CONDA_PREFIX != *$ENV_NAME* ]]; then
       # Try to activate environment
       conda activate $ENV_NAME
+ #   else
+    # Create the environment and activate
+    #  echo "Conda env '$ENV_NAME' doesn't exist."
+    #  conda env create -f environment.yml
+    #  conda activate $ENV
+      
     fi
   fi
 }
