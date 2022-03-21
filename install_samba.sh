@@ -1,7 +1,9 @@
 #!/bin/bash
 
-sudo apt-get install samba samba-common-bin
+sudo apt-get install -y samba samba-common-bin
 sudo mv /etc/samba/smb.conf /etc/samba/smb.conf.old
+sudo systemctl stop smbd  
+sudo systemctl status smbd
 
 echo
 read -p 'Enter full directory path to share: ' pathvar
@@ -12,7 +14,7 @@ hs=$HOSTNAME
 sudo cat <<EOF >> /etc/samba/smb.conf
 [global]
    server string = File Server
-   workgroup = $hs
+   workgroup = WORKGROUP
    security = user
    map to guest = Bad User
    name resolve order = bcast host
@@ -22,7 +24,7 @@ EOF
 
 # creating two shares for their respective purposes - modify as required
 sudo cat <<EOF >> /etc/samba/shares.conf
-[$namevar-Public]
+[$hs-$namevar-Public]
    comment = $commentvar
    path = $pathvar
    force user = smbuser
@@ -34,7 +36,7 @@ sudo cat <<EOF >> /etc/samba/shares.conf
    public = yes
    writable = yes
 
-[$namevar-Protected]
+[$hs-$namevar-Protected]
    path = $pathvar
    comment = $commentvar
    force user = smbuser
@@ -57,5 +59,5 @@ sudo chown -R smbuser:smbgroup $namevar
 sudo chmod -R g+w $namevar
 
 # restart the smb service and check status
-sudo systemctl restart smbd
+sudo systemctl start smbd
 sudo systemctl status smbd
