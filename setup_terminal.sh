@@ -66,7 +66,7 @@ if [[ $arch == x86* ]]; then
 # install build-essential
 sudo apt update && sudo apt install -y build-essential
 # install miniconda from accompanying script
-bash create_py39_miniconda.sh
+bash scripts/create_py39_miniconda.sh
 fi
 #########################################################################
 
