@@ -16,9 +16,10 @@ sed -i 's|ZSH_THEME="robbyrussell"|ZSH_THEME="powerlevel10k/powerlevel10k"|' ~/.
 
 ##### Make Scripts directory and source files in ZSRC #####
 mkdir ~/.scripts
-cp updater.sh ~/.scripts/
-cp myAliases.sh ~/.scripts/
-cp conda_auto_env.sh ~/.scripts/
+cp scripts/updater.sh ~/.scripts/
+cp scripts/myAliases.sh ~/.scripts/
+cp scripts/conda_auto_env.sh ~/.scripts/
+cp scripts/my_funcs.sh ~/.scripts/
 
 echo "Adding conda_auto_env, myAliases, and updater to scripts and zshrc"
 echo "##### Activate Conda Envs When Entering Folder #####" >> ~/.zshrc
@@ -42,8 +43,11 @@ echo $arch
 if [[ $arch == armv* ]]; then
 echo "Arm architecture - Save yourself the trouble, use Python virtualenvs"
 echo $mini_vers
-echo "##### Adding IOTstack #####"
-git clone https://github.com/SensorsIot/IOTstack.git ~/IOTstack
+
+
+# doing this another way now
+echo "##### DEPRICATED: Not using IOTstack anymore examine this script to install #####"
+# git clone https://github.com/SensorsIot/IOTstack.git ~/IOTstack 
 
 mkdir ~/.ssh/
 sudo chmod 700 ~/.ssh/

@@ -1,10 +1,14 @@
 # Setup Terminal in Ubuntu with support for WSL2 and Ubuntu Server
 
+I know this isn't a proper dotfile, but more of a catch-all for my common configs I automate away
+
 ## Motivation: <br>
-I dislike setting up environments, so I'm automating it to speed up deployments. I'll be trying to incorporate as many of my settingas as I like for all the linux environments I use.</br>
+Automating my depoloyments. 
+I'll be trying to incorporate as many of my settingas as I like for all the linux environments I use.</br>
 
 ### Contents
 * [Quickstart: Run and Done](#Quickstart-Run-and-Done)
+* [Docker-compose files](#Docker-compose)
 * [Thanks to](#thanks-to)
 * [Final Notes](#final-notes)
 
@@ -13,9 +17,12 @@ Setup WSL2 for your Windows 10 pro system and isntall an Ubuntu distro from the 
 (Note: I've tested this on 20.04/18.04 so far)
 I also use the new Microsoft Terminal, which you also install from the micro soft store
 
-It's still a bit quirky (sorry) sometime it installs in one pass, sometimes it only gets upto the 'git' portion
-if this happens rerun the setup script
+It's still a bit quirky (sorry) 
+when install loads into ohmyzosh for the first time simply type "exit" to continue installation
+it is safe to rerun the script if installs were missed
 
+## Docker-Compose
+Docker-Compose is pretty standard in my workflow now and as such adding the essentials in a templates folder. For networking reasons I merge all templates into a single docker-compose.yml file then add additional funcationality from portainer. See notes in individual template files
 
 ## Thanks to:
 [Scott Hanselman](https://www.hanselman.com/blog/ItsTimeForYouToInstallWindowsTerminal.aspx)
