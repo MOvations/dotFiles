@@ -1,35 +1,191 @@
-# Setup Terminal in Ubuntu with support for WSL2 and Ubuntu Server
+# Dotfiles
 
-I know this isn't a proper dotfile, but more of a catch-all for my common configs I automate away
+Cross-platform development environment setup for **Linux**, **WSL2**, **macOS**, and **Windows**.
 
-## Motivation: <br>
-Automating my depoloyments. 
-I'll be trying to incorporate as many of my settingas as I like for all the linux environments I use.</br>
+## Supported Platforms
 
-### Contents
-* [Quickstart: Run and Done](#Quickstart-Run-and-Done)
-* [Docker-compose files](#Docker-compose)
-* [Thanks to](#thanks-to)
-* [Final Notes](#final-notes)
+| Platform | Script | Shell |
+|----------|--------|-------|
+| Ubuntu / WSL2 | `setup_terminal.sh` | Zsh + Oh My Zsh + Powerlevel10k |
+| macOS | `setup_iterm.sh` | Zsh + Oh My Zsh + Powerlevel10k |
+| Windows | `setup_windows.ps1` | PowerShell 7 + Starship |
 
-## Quickstart: Run and Done 
-Setup WSL2 for your Windows 10 pro system and isntall an Ubuntu distro from the Microsoft store. 
-(Note: I've tested this on 20.04/18.04 so far)
-I also use the new Microsoft Terminal, which you also install from the micro soft store
+## Contents
 
-It's still a bit quirky (sorry) 
-when install loads into ohmyzosh for the first time simply type "exit" to continue installation
-it is safe to rerun the script if installs were missed
+- [Windows Setup](#windows-setup)
+- [Linux/WSL2 Setup](#linuxwsl2-setup)
+- [macOS Setup](#macos-setup)
+- [Docker Compose Templates](#docker-compose-templates)
+- [What Gets Installed](#what-gets-installed)
+- [Thanks To](#thanks-to)
 
-## Docker-Compose
-Docker-Compose is pretty standard in my workflow now and as such adding the essentials in a templates folder. For networking reasons I merge all templates into a single docker-compose.yml file then add additional funcationality from portainer. See notes in individual template files
+---
 
-## Thanks to:
-[Scott Hanselman](https://www.hanselman.com/blog/ItsTimeForYouToInstallWindowsTerminal.aspx)
-and
-[Fireship.io](https://fireship.io/lessons/windows-10-for-web-dev/)
-for getting me setup with some great settings!
+## Windows Setup
 
-## Final Notes:
+### Prerequisites
+- Windows 10/11 (ARM64 or x86_64)
+- PowerShell 7+ installed (`winget install Microsoft.PowerShell`)
+- Windows Terminal (recommended)
 
-I left settings for bashrc (commented out) in the setup script if you'd like to have different look in an editor (e.g., VScode) vs Terminal
+### Quick Start
+
+```powershell
+# Clone the repo
+git clone https://github.com/MOvations/dotfiles.git
+cd dotfiles
+
+# Run the setup script
+./setup_windows.ps1
+```
+
+### What It Does
+- Detects architecture (ARM64/x86_64) automatically
+- Installs **Starship** prompt via winget
+- Downloads and installs **Miniconda** (architecture-appropriate)
+- Sets up PowerShell profile with aliases
+- Configures Starship with a clean, informative prompt
+
+### Options
+
+```powershell
+# Skip Miniconda installation
+./setup_windows.ps1 -SkipMiniconda
+
+# Skip Starship installation
+./setup_windows.ps1 -SkipStarship
+
+# Force reinstall everything
+./setup_windows.ps1 -Force
+```
+
+### Included Aliases
+
+| Alias | Command | Description |
+|-------|---------|-------------|
+| `..` | `cd ..` | Go up one directory |
+| `...` | `cd ../../..` | Go up three directories |
+| `ll` | `ls -la` | Long listing with details |
+| `gs` | `git status` | Git status |
+| `gc "msg"` | `git commit -am` | Git commit all with message |
+| `gp` | `git pull --rebase` | Git pull with rebase |
+| `gl` | `git log --graph` | Pretty git log |
+| `mk dir` | `mkdir + cd` | Create and enter directory |
+| `wttr` | `curl wttr.in` | Weather in terminal |
+| `servr` | `python -m http.server` | Local HTTP server on :7200 |
+| `which` | `Get-Command` | Find command location |
+| `touch` | Create/update file | Unix-style touch |
+
+---
+
+## Linux/WSL2 Setup
+
+### Quick Start
+
+```bash
+git clone https://github.com/MOvations/dotfiles.git
+cd dotfiles
+bash setup_terminal.sh
+```
+
+### What It Does
+- Installs tmux, neofetch, pydf
+- Sets up **Oh My Zsh** with **Powerlevel10k** theme
+- Installs Miniconda (x86 only, ARM uses virtualenvs)
+- Configures shell aliases and functions
+- Sets up Jupyter Lab with browser support for WSL
+
+---
+
+## macOS Setup
+
+### Quick Start
+
+```bash
+git clone https://github.com/MOvations/dotfiles.git
+cd dotfiles
+bash setup_iterm.sh
+```
+
+### What It Does
+- Installs Homebrew
+- Installs iTerm2, VS Code, Docker, and other apps via brew cask
+- Sets up Oh My Zsh with Powerlevel10k
+- Installs Miniconda with conda-zsh-completion
+- Configures Dock auto-hide
+
+---
+
+## Docker Compose Templates
+
+Located in `docker_templates/`:
+
+| Service | Description |
+|---------|-------------|
+| Grafana | Visualization and dashboards |
+| Homer | Home server dashboard |
+| InfluxDB | Time-series database |
+| MSSQL | Microsoft SQL Server |
+| Plex | Media server |
+| Portainer | Docker GUI management |
+| PostgreSQL | Relational database |
+| Prometheus | Metrics collection + Node Exporter + cAdvisor |
+
+Merge templates into a single `docker-compose.yml` for networking, then manage via Portainer.
+
+---
+
+## What Gets Installed
+
+### Conda Environments
+
+Two pre-configured environments in `conda_envs/`:
+
+**py39.yml** - General data science:
+- Python 3.9, JupyterLab, pandas, seaborn, black, nodejs
+
+**ts4.yml** - Time-series & ML:
+- Python 3.8, Prophet, scikit-learn, PyTorch, LightGBM, XGBoost, Dask
+
+Create with: `conda env create -f conda_envs/py39.yml`
+
+---
+
+## File Structure
+
+```
+dotfiles/
+├── setup_terminal.sh          # Linux/WSL2 setup
+├── setup_iterm.sh             # macOS setup
+├── setup_windows.ps1          # Windows setup
+├── files/
+│   ├── starship.toml          # Starship prompt config
+│   ├── Microsoft.PowerShell_profile.ps1  # PowerShell profile
+│   ├── config                 # SSH client config
+│   └── vscode_settings_snippet.txt
+├── scripts/
+│   ├── myAliases.sh           # Shell aliases (bash/zsh)
+│   ├── myFuncs.sh             # Shell functions
+│   ├── updater.sh             # System updater
+│   └── ...
+├── conda_envs/
+│   ├── py39.yml
+│   └── ts4.yml
+└── docker_templates/
+    └── ...
+```
+
+---
+
+## Thanks To
+
+- [Scott Hanselman](https://www.hanselman.com/blog/ItsTimeForYouToInstallWindowsTerminal.aspx)
+- [Fireship.io](https://fireship.io/lessons/windows-10-for-web-dev/)
+- [Starship](https://starship.rs/)
+- [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
+
+---
+
+## License
+
+MIT - Do whatever you want with it.
