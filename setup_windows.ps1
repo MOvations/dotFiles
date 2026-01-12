@@ -140,6 +140,8 @@ if (-not $SkipMiniconda) {
     if (Test-Path $condaExe) {
         Write-Info "Initializing conda for PowerShell..."
         & $condaExe init powershell | Out-Null
+        # Disable conda's prompt modification (Starship handles it)
+        & $condaExe config --set changeps1 false | Out-Null
         Write-Success "Conda initialized"
     }
 }
