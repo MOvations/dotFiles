@@ -124,8 +124,12 @@ function Invoke-CondaAutoEnv {
 
 #region PSReadLine Configuration
 if (Get-Module -ListAvailable -Name PSReadLine) {
-    Set-PSReadLineOption -PredictionSource History
-    Set-PSReadLineOption -PredictionViewStyle ListView
+    try {
+        Set-PSReadLineOption -PredictionSource History
+        Set-PSReadLineOption -PredictionViewStyle ListView
+    } catch {
+        # Prediction features require virtual terminal support
+    }
     Set-PSReadLineOption -EditMode Windows
     Set-PSReadLineKeyHandler -Key Tab -Function MenuComplete
     Set-PSReadLineKeyHandler -Key UpArrow -Function HistorySearchBackward

@@ -41,8 +41,10 @@ Write-Info "Architecture: $arch"
 
 switch ($arch) {
     "Arm64" {
-        $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-arm64.exe"
-        $archName = "ARM64"
+        # Note: Miniconda doesn't have native ARM64 Windows builds yet
+        # Using x64 version which runs via Windows x64 emulation
+        $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
+        $archName = "ARM64 (using x64 emulation)"
     }
     "X64" {
         $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
