@@ -2,34 +2,48 @@
 # github.com/MOvations/dotfiles
 # Ported from scripts/myAliases.sh
 
-#region Conda Initialize (Lazy Load for fast startup)
-# Conda is initialized on first use of 'conda' or 'ca' (conda activate)
-# This saves ~1.5-2 seconds on shell startup
-$Global:CondaInitialized = $false
-$condaPath = "$env:USERPROFILE\miniconda3"
-$condaExe = "$condaPath\Scripts\conda.exe"
-
-function Initialize-Conda {
-    if (-not $Global:CondaInitialized -and (Test-Path $condaExe)) {
-        (& $condaExe "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
-        $Global:CondaInitialized = $true
+#region uv / Python Virtual Environment Helpers
+# Activate .venv in current directory (or specified path)
+function act {
+    param([string]$Path = ".venv")
+    $activateScript = Join-Path $Path "Scripts\Activate.ps1"
+    if (Test-Path $activateScript) {
+        & $activateScript
+    } else {
+        Write-Host "No virtual environment found at $Path" -ForegroundColor Yellow
+        Write-Host "Create one with: uv venv" -ForegroundColor Gray
     }
 }
 
-# Wrapper for conda command - initializes on first use
-function conda {
-    Initialize-Conda
-    & $condaExe @args
+# Deactivate current virtual environment
+function deact {
+    if ($env:VIRTUAL_ENV) {
+        deactivate
+    } else {
+        Write-Host "No virtual environment is active" -ForegroundColor Yellow
+    }
 }
 
-# Quick alias for conda activate
-function ca {
-    Initialize-Conda
-    conda activate @args
+# Create and activate a virtual environment
+function mkenv {
+    param([string]$Path = ".venv")
+    if (Get-Command uv -ErrorAction SilentlyContinue) {
+        uv venv $Path
+        act $Path
+    } else {
+        python -m venv $Path
+        act $Path
+    }
 }
 
-# Initialize immediately if you want (uncomment below):
-# Initialize-Conda
+# Quick pip install via uv (falls back to pip)
+function pi {
+    if (Get-Command uv -ErrorAction SilentlyContinue) {
+        uv pip install @args
+    } else {
+        pip install @args
+    }
+}
 #endregion
 
 #region Starship Prompt
@@ -128,20 +142,17 @@ function myip { (Invoke-WebRequest -Uri "https://ifconfig.me/ip").Content.Trim()
 function editprofile { code $PROFILE }
 #endregion
 
-#region Conda Auto-Env (optional)
-# Automatically activate conda environment when entering folder with environment.yml
-function Invoke-CondaAutoEnv {
-    if (Test-Path "environment.yml") {
-        $envName = (Get-Content "environment.yml" -First 1) -replace "name:\s*", ""
-        $currentEnv = $env:CONDA_DEFAULT_ENV
-        if ($currentEnv -ne $envName) {
-            conda activate $envName 2>$null
-        }
+#region Auto-Activate venv (optional)
+# Automatically activate .venv when entering folder with one
+function Invoke-VenvAutoActivate {
+    $venvPath = Join-Path (Get-Location) ".venv\Scripts\Activate.ps1"
+    if ((Test-Path $venvPath) -and -not $env:VIRTUAL_ENV) {
+        & $venvPath
     }
 }
 
-# Uncomment to enable conda auto-env on directory change:
-# $ExecutionContext.SessionState.InvokeCommand.PreCommandAction = { Invoke-CondaAutoEnv }
+# Uncomment to enable auto-activate on directory change:
+# $ExecutionContext.SessionState.InvokeCommand.PreCommandAction = { Invoke-VenvAutoActivate }
 #endregion
 
 #region PSReadLine Configuration

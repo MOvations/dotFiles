@@ -5,15 +5,17 @@
 .SYNOPSIS
     Windows development environment setup script for dotfiles.
 .DESCRIPTION
-    Sets up PowerShell profile, Miniconda, Starship prompt, and aliases.
+    Sets up PowerShell profile, uv (Python manager), Starship prompt, and aliases.
     Works on both Windows ARM64 and x86_64 architectures.
 .NOTES
     Run this script in PowerShell 7+ with: ./setup_windows.ps1
 #>
 
 param(
-    [switch]$SkipMiniconda,
+    [switch]$SkipUv,
+    [switch]$SkipPython,
     [switch]$SkipStarship,
+    [string]$PythonVersion = "3.12",
     [switch]$Force
 )
 
@@ -38,28 +40,8 @@ Write-Host @"
 Write-Step "Detecting system architecture"
 $arch = [System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture
 Write-Info "Architecture: $arch"
-
-switch ($arch) {
-    "Arm64" {
-        # Note: Miniconda doesn't have native ARM64 Windows builds yet
-        # Using x64 version which runs via Windows x64 emulation
-        $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
-        $archName = "ARM64 (using x64 emulation)"
-    }
-    "X64" {
-        $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86_64.exe"
-        $archName = "x86_64"
-    }
-    "X86" {
-        $minicondaUrl = "https://repo.anaconda.com/miniconda/Miniconda3-latest-Windows-x86.exe"
-        $archName = "x86"
-    }
-    default {
-        Write-Error "Unsupported architecture: $arch"
-        exit 1
-    }
-}
-Write-Success "Detected $archName architecture"
+# uv handles architecture automatically - no special handling needed
+Write-Success "Detected $arch architecture"
 
 ##### Get script directory (dotfiles root) #####
 $dotfilesRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -108,41 +90,45 @@ if (-not $SkipStarship) {
     }
 }
 
-##### Install Miniconda #####
-$condaPath = "$env:USERPROFILE\miniconda3"
-$condaExe = "$condaPath\Scripts\conda.exe"
+##### Install uv (Python package manager) #####
+if (-not $SkipUv) {
+    Write-Step "Installing uv (fast Python package manager)"
 
-if (-not $SkipMiniconda) {
-    Write-Step "Installing Miniconda ($archName)"
-
-    if ((Test-Path $condaExe) -and -not $Force) {
-        Write-Warning "Miniconda already installed at $condaPath, skipping (use -Force to reinstall)"
+    $uvInstalled = Get-Command uv -ErrorAction SilentlyContinue
+    if ($uvInstalled -and -not $Force) {
+        Write-Warning "uv already installed, skipping (use -Force to reinstall)"
     } else {
-        $installerPath = "$env:TEMP\Miniconda3-latest.exe"
-
-        Write-Info "Downloading Miniconda from $minicondaUrl"
-        Invoke-WebRequest -Uri $minicondaUrl -OutFile $installerPath -UseBasicParsing
-
-        Write-Info "Installing Miniconda to $condaPath (this may take a few minutes)..."
-        Start-Process -FilePath $installerPath -ArgumentList @(
-            "/InstallationType=JustMe",
-            "/RegisterPython=0",
-            "/AddToPath=0",
-            "/S",
-            "/D=$condaPath"
-        ) -Wait -NoNewWindow
-
-        Remove-Item $installerPath -Force -ErrorAction SilentlyContinue
-        Write-Success "Miniconda installed to $condaPath"
+        try {
+            winget install --id astral-sh.uv --accept-package-agreements --accept-source-agreements
+            Write-Success "uv installed"
+        } catch {
+            Write-Warning "winget install failed, trying direct download..."
+            Invoke-RestMethod https://astral.sh/uv/install.ps1 | Invoke-Expression
+        }
     }
 
-    # Initialize conda
-    if (Test-Path $condaExe) {
-        Write-Info "Initializing conda for PowerShell..."
-        & $condaExe init powershell | Out-Null
-        # Disable conda's prompt modification (Starship handles it)
-        & $condaExe config --set changeps1 false | Out-Null
-        Write-Success "Conda initialized"
+    # Refresh PATH to pick up uv
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "Machine") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "User")
+}
+
+##### Install Python via uv #####
+if (-not $SkipUv -and -not $SkipPython) {
+    Write-Step "Installing Python $PythonVersion via uv"
+
+    # Check if uv is available now
+    $uvCmd = Get-Command uv -ErrorAction SilentlyContinue
+    if ($uvCmd) {
+        Write-Info "Installing Python $PythonVersion..."
+        uv python install $PythonVersion
+        Write-Success "Python $PythonVersion installed"
+
+        # Show installed Python
+        $pythonPath = uv python find $PythonVersion 2>$null
+        if ($pythonPath) {
+            Write-Info "Python location: $pythonPath"
+        }
+    } else {
+        Write-Warning "uv not found in PATH. Restart terminal and run: uv python install $PythonVersion"
     }
 }
 
@@ -194,12 +180,20 @@ Write-Host @"
 Write-Host "Installed components:" -ForegroundColor Cyan
 Write-Host "  - Fastfetch (system info on startup)"
 if (-not $SkipStarship) { Write-Host "  - Starship prompt" }
-if (-not $SkipMiniconda) { Write-Host "  - Miniconda ($archName)" }
+if (-not $SkipUv) { Write-Host "  - uv (fast Python manager)" }
+if (-not $SkipUv -and -not $SkipPython) { Write-Host "  - Python $PythonVersion" }
 Write-Host "  - PowerShell profile with aliases"
 Write-Host ""
 Write-Host "Next steps:" -ForegroundColor Yellow
 Write-Host "  1. Restart your terminal or run: . `$PROFILE"
-Write-Host "  2. (Optional) Create conda environment: conda env create -f conda_envs/py39.yml"
+Write-Host "  2. Create a project with virtual env: uv init myproject && cd myproject && uv venv"
+Write-Host "  3. Or add packages directly: uv pip install requests"
+Write-Host ""
+Write-Host "Quick commands:" -ForegroundColor Cyan
+Write-Host "  uv venv          - Create .venv in current directory"
+Write-Host "  act              - Activate .venv (alias)"
+Write-Host "  uv pip install X - Install package (fast!)"
+Write-Host "  uv python list   - Show available Python versions"
 Write-Host ""
 Write-Host "Your aliases are ready: gs, gc, gp, gl, ll, mk, wttr, etc."
 Write-Host ""

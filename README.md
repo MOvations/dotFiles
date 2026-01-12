@@ -41,16 +41,23 @@ cd dotfiles
 
 ### What It Does
 - Detects architecture (ARM64/x86_64) automatically
+- Installs **Fastfetch** (system info on startup)
 - Installs **Starship** prompt via winget
-- Downloads and installs **Miniconda** (architecture-appropriate)
+- Installs **uv** (fast Python package manager) and Python
 - Sets up PowerShell profile with aliases
 - Configures Starship with a clean, informative prompt
 
 ### Options
 
 ```powershell
-# Skip Miniconda installation
-./setup_windows.ps1 -SkipMiniconda
+# Skip uv/Python installation
+./setup_windows.ps1 -SkipUv
+
+# Skip only Python (keep uv)
+./setup_windows.ps1 -SkipPython
+
+# Use a different Python version (default: 3.12)
+./setup_windows.ps1 -PythonVersion 3.11
 
 # Skip Starship installation
 ./setup_windows.ps1 -SkipStarship
@@ -59,10 +66,25 @@ cd dotfiles
 ./setup_windows.ps1 -Force
 ```
 
+### uv Quick Reference
+
+```powershell
+uv python install 3.12    # Install Python version
+uv python list            # Show available versions
+uv venv                   # Create .venv in current directory
+uv pip install requests   # Install packages (very fast!)
+uv pip freeze             # Show installed packages
+uv init myproject         # Initialize new project with pyproject.toml
+```
+
 ### Included Aliases
 
 | Alias | Command | Description |
 |-------|---------|-------------|
+| `act` | Activate .venv | Activate virtual environment |
+| `deact` | Deactivate | Deactivate virtual environment |
+| `mkenv` | `uv venv` + activate | Create and activate venv |
+| `pi` | `uv pip install` | Quick package install |
 | `..` | `cd ..` | Go up one directory |
 | `...` | `cd ../../..` | Go up three directories |
 | `ll` | `ls -la` | Long listing with details |
@@ -137,7 +159,7 @@ Merge templates into a single `docker-compose.yml` for networking, then manage v
 
 ## What Gets Installed
 
-### Conda Environments
+### Conda Environments (Linux/macOS)
 
 Two pre-configured environments in `conda_envs/`:
 
@@ -148,6 +170,8 @@ Two pre-configured environments in `conda_envs/`:
 - Python 3.8, Prophet, scikit-learn, PyTorch, LightGBM, XGBoost, Dask
 
 Create with: `conda env create -f conda_envs/py39.yml`
+
+> **Note:** Windows uses **uv** instead of Conda for faster, lighter Python environment management. Use `uv pip install` to install packages from requirements.txt or pyproject.toml.
 
 ---
 
@@ -183,6 +207,7 @@ dotfiles/
 - [Fireship.io](https://fireship.io/lessons/windows-10-for-web-dev/)
 - [Starship](https://starship.rs/)
 - [Powerlevel10k](https://github.com/romkatv/powerlevel10k)
+- [uv](https://docs.astral.sh/uv/) - Fast Python package manager by Astral
 
 ---
 

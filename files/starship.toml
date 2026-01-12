@@ -11,7 +11,6 @@ $git_status\
 $cmd_duration\
 $fill\
 $python\
-$conda\
 $nodejs\
 $docker_context\
 $line_break\
@@ -66,14 +65,13 @@ deleted = "✘${count}"
 [python]
 symbol = " "
 style = "bold yellow"
-format = '[${symbol}${pyenv_prefix}(${version})(\($virtualenv\))]($style) '
+format = '[${symbol}(${version} )(\($virtualenv\))]($style) '
 python_binary = ["python3", "python"]
+detect_extensions = ["py"]
+detect_files = [".python-version", "pyproject.toml", "requirements.txt", "setup.py", "uv.lock"]
 
 [conda]
-symbol = " "
-style = "bold green"
-format = "[$symbol$environment]($style) "
-ignore_base = false
+disabled = true
 
 [nodejs]
 symbol = " "
