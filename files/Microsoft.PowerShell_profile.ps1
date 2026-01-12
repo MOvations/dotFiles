@@ -143,5 +143,9 @@ Set-Alias -Name py -Value python
 Set-Alias -Name open -Value explorer.exe
 #endregion
 
-# Welcome message (optional - uncomment to enable)
-# Write-Host "PowerShell $($PSVersionTable.PSVersion) | $(Get-Date -Format 'yyyy-MM-dd HH:mm')" -ForegroundColor DarkGray
+#region Fastfetch on Start
+# Display system info on terminal launch (like neofetch on Linux)
+if (Get-Command fastfetch -ErrorAction SilentlyContinue) {
+    fastfetch
+}
+#endregion

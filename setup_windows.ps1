@@ -65,6 +65,16 @@ Write-Success "Detected $archName architecture"
 $dotfilesRoot = Split-Path -Parent $MyInvocation.MyCommand.Path
 Write-Info "Dotfiles root: $dotfilesRoot"
 
+##### Install Fastfetch #####
+Write-Step "Installing Fastfetch"
+$fastfetchInstalled = Get-Command fastfetch -ErrorAction SilentlyContinue
+if ($fastfetchInstalled -and -not $Force) {
+    Write-Warning "Fastfetch already installed, skipping (use -Force to reinstall)"
+} else {
+    winget install --id Fastfetch-cli.Fastfetch --accept-package-agreements --accept-source-agreements
+    Write-Success "Fastfetch installed"
+}
+
 ##### Install Starship #####
 if (-not $SkipStarship) {
     Write-Step "Installing Starship prompt"
@@ -180,6 +190,7 @@ Write-Host @"
 "@ -ForegroundColor Green
 
 Write-Host "Installed components:" -ForegroundColor Cyan
+Write-Host "  - Fastfetch (system info on startup)"
 if (-not $SkipStarship) { Write-Host "  - Starship prompt" }
 if (-not $SkipMiniconda) { Write-Host "  - Miniconda ($archName)" }
 Write-Host "  - PowerShell profile with aliases"
