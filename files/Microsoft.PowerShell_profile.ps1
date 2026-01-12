@@ -2,12 +2,34 @@
 # github.com/MOvations/dotfiles
 # Ported from scripts/myAliases.sh
 
-#region Conda Initialize
-# !! Contents within this block are managed by 'conda init' !!
+#region Conda Initialize (Lazy Load for fast startup)
+# Conda is initialized on first use of 'conda' or 'ca' (conda activate)
+# This saves ~1.5-2 seconds on shell startup
+$Global:CondaInitialized = $false
 $condaPath = "$env:USERPROFILE\miniconda3"
-if (Test-Path "$condaPath\Scripts\conda.exe") {
-    (& "$condaPath\Scripts\conda.exe" "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+$condaExe = "$condaPath\Scripts\conda.exe"
+
+function Initialize-Conda {
+    if (-not $Global:CondaInitialized -and (Test-Path $condaExe)) {
+        (& $condaExe "shell.powershell" "hook") | Out-String | ?{$_} | Invoke-Expression
+        $Global:CondaInitialized = $true
+    }
 }
+
+# Wrapper for conda command - initializes on first use
+function conda {
+    Initialize-Conda
+    & $condaExe @args
+}
+
+# Quick alias for conda activate
+function ca {
+    Initialize-Conda
+    conda activate @args
+}
+
+# Initialize immediately if you want (uncomment below):
+# Initialize-Conda
 #endregion
 
 #region Starship Prompt
