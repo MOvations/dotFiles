@@ -8,13 +8,16 @@ $hostname\
 $directory\
 $git_branch\
 $git_status\
+$cmd_duration\
+$fill\
 $python\
 $conda\
 $nodejs\
 $docker_context\
-$cmd_duration\
 $line_break\
 $character"""
+
+right_format = ""
 
 # Timeout for commands (ms)
 command_timeout = 1000
@@ -88,6 +91,9 @@ min_time = 2000
 style = "bold yellow"
 format = "[$duration]($style) "
 show_milliseconds = false
+
+[fill]
+symbol = " "
 
 [line_break]
 disabled = false
